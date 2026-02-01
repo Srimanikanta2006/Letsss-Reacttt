@@ -7,14 +7,15 @@ function App() {
   const [from, setFrom] = useState("usd");
   const [to, setTo] = useState("inr");
   const [convertedAmount, setConvertedAmount] = useState(0);
-  const currencyInfo = useCurrencyInfo(from);
+  const currencyInfo = useCurrencyInfo(from); //u get the list of currencies based on from currency.
   const options = Object.keys(currencyInfo || {}); // cases are important.
-
+  //u select the all list of currencies from the data(currencyInfo).
   const swap = () => {
     setFrom(to);
     setTo(from);
     setConvertedAmount(amount);
     setAmount(convertedAmount);
+    //swap the from and to currencies and their amounts.
   };
 
   const convert = () => {
@@ -32,7 +33,7 @@ function App() {
         <div className="w-full max-w-md mx-auto border border-gray-60 rounded-lg p-5 backdrop-blur-sm bg-white/30">
           <form
             onSubmit={(e) => {
-              e.preventDefault();
+              e.preventDefault(); //prevent page reload on submit
               convert();
             }}
           >
