@@ -54,6 +54,9 @@ const router = createBrowserRouter(
       <Route path="contact" element={<Contact />} />
       <Route path="user/:id" element={<User />} />
       <Route loader={githubInfoLoader} path="github" element={<Github />} />
+      {/* loader loads data before the component is rendered, suppose a button, when
+      hovered the data is loaded, when clicked the component is rendered
+      instantly with the loaded data */}
     </Route>,
   ),
 );
