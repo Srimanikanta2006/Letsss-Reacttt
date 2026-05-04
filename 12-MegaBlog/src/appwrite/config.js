@@ -88,7 +88,7 @@ export class Service {
       const result = await this.tablesDB.listRows({
         databaseId: conf.appwriteDatabaseId,
         tableId: conf.appwriteCollectionId,
-        queries: [Query.isNotNull("status"), Query.equal("status", true)],
+        queries: [Query.isNotNull("status"), Query.equal("status", "active")],
       });
       return result;
     } catch (e) {

@@ -5,8 +5,10 @@ function Home() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     appwriteService.getPosts().then((posts) => {
-      if (posts) {
+      if (posts && Array.isArray(posts.documents)) {
         setPosts(posts.documents);
+      } else {
+        setPosts([]);
       }
     });
   }, []);
