@@ -1,4 +1,5 @@
 import conf from "../conf/conf.js";
+import authService from "./auth.js";
 import {
   Client,
   Account,
@@ -22,16 +23,20 @@ export class Service {
   }
   async createPost({ title, slug, content, featuredImage, status, userId }) {
     try {
-      const result = await this.tablesDB.createRow({
+      const user = await authService.getCurrentUser();
+
+      if (!user) throw new Error("User not logged in");
+
+      return await this.tablesDB.createRow({
         databaseId: conf.appwriteDatabaseId,
-        tableId: conf.appwriteCollectionId, // Already using tableId (correct for TablesDB API)
+        tableId: conf.appwriteCollectionId,
         rowId: slug,
         data: {
-          title: title,
-          content: content,
-          featuredImage: featuredImage,
-          status: status,
-          userId: userId,
+          title,
+          content,
+          featuredImage,
+          status,
+          userId: user.$id, // ✅ correct
         },
       });
       return result;
@@ -88,9 +93,10 @@ export class Service {
       const result = await this.tablesDB.listRows({
         databaseId: conf.appwriteDatabaseId,
         tableId: conf.appwriteCollectionId,
-        queries: [Query.isNotNull("status"), Query.equal("status", "active")],
+        queries: [Query.equal("status", "active")],
+        // queries: [],
       });
-      return result;
+      return result.rows;
     } catch (e) {
       console.log(`Error occured in database methods ${e}`);
     }
@@ -101,10 +107,10 @@ export class Service {
     try {
       const result = await this.bucket.createFile({
         bucketId: conf.appwriteBucketId,
-        fileId: ID,
+        fileId: ID.unique(),
         file: file,
       });
-      return true;
+      return result;
     } catch (error) {
       console.log("Appwrite service :: updateFile :: error ", error);
       return false;
